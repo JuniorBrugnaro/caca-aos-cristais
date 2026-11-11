@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0c102d">
+  <meta name="description" content="Explore ilhas flutuantes, leia coordenadas e encontre os cristais do labirinto.">
+  <title>Caça aos Cristais</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="campaign.js"></script>
+  <script defer src="game.js"></script>
+  <script defer src="sound.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="sky" aria-hidden="true"><div class="sky-art"></div><div class="sky-light"></div></div>
+  <main id="home" class="home-shell">
+    <header class="home-hero">
+      <div class="home-logo">
+        <div class="logo-crystals" aria-hidden="true"><i class="gem"></i><i class="gem"></i><i class="gem"></i></div>
+        <h1>Caça aos <em>Cristais</em></h1>
+        <p>Uma aventura por coordenadas</p>
+      </div>
+    </header>
+    <section class="home-selection" aria-labelledby="home-title">
+      <div class="selection-head">
+        <div><h2 id="home-title">Escolha sua série</h2><p id="grade-notice" aria-live="polite"></p></div>
+        <div class="home-actions">
+          <button class="quiet-button sound-toggle" type="button" data-sound-toggle aria-pressed="true">Som ligado</button>
+          <button id="change-grade" class="quiet-button" type="button" hidden>Trocar série</button>
+        </div>
+      </div>
+      <div class="grade-grid" id="grades"></div>
+    </section>
+    <footer class="home-credits">
+      <p class="school">1º Ensino Médio · Einstein</p>
+      <p>Maria Luiza, Nicole Fernanda, Moacir, Otavio e Alef</p>
+      <p>Professor Flávio (Física)</p>
+    </footer>
+  </main>
+  <main id="play" class="shell" hidden>
+    <header class="header">
+      <div class="brand">
+        <span class="brand-gem gem" aria-hidden="true"></span>
+        <div><h1>Caça aos <em>Cristais</em></h1><p id="playing-grade"></p></div>
+      </div>
+      <div class="game-actions">
+        <button class="quiet-button sound-toggle" type="button" data-sound-toggle aria-pressed="true">Som ligado</button>
+        <button class="quiet-button" type="button" id="home-button">Menu</button>
+        <button class="quiet-button" type="button" id="help-button">Como jogar</button>
+      </div>
+    </header>
+    <nav class="levels" aria-label="Escolha uma fase" id="levels"></nav>
+    <section class="game" aria-label="Jogo">
+      <div class="island">
+        <div class="board-head">
+          <h2 id="level-title">Primeiros passos</h2>
+          <div id="health" class="health" aria-label="3 de 3 corações"></div>
+        </div>
+        <div class="stage" id="stage">
+          <span class="axis-name axis-line">LINHA</span>
+          <div id="axis-y" class="axis axis-y" aria-hidden="true"></div>
+          <div class="board" id="board" role="img" aria-label="Mapa do labirinto">
+            <div class="tiles" id="tiles"></div>
+            <div id="actors" class="actors"></div>
+            <div class="robot-piece" id="robot" aria-hidden="true">
+              <div class="robot"><i class="antenna"></i><i class="ears"></i><i class="head"><b></b></i><i class="torso"></i><i class="boots"></i><i class="sword"></i></div>
+            </div>
+          </div>
+          <div id="axis-x" class="axis axis-x" aria-hidden="true"></div>
+          <span class="axis-name axis-column">COLUNA</span>
+        </div>
+      </div>
+      <aside class="console" aria-label="Missão e controles">
+        <div class="mission" id="mission" aria-live="polite">
+          <div class="mission-label"><span class="gem" aria-hidden="true"></span> SUA MISSÃO</div>
+          <h2 id="objective"></h2>
+          <p id="instruction"></p>
+        </div>
+        <div class="stats">
+          <div><span>Você está em</span><strong id="position">(1, 1)</strong></div>
+          <div><span>Cristais</span><strong id="crystals">0/1</strong></div>
+        </div>
+        <div class="status-row" id="alert-row" hidden>
+          <span id="alert"></span><span id="bonus"></span>
+        </div>
+        <div class="status-row bridge-status" id="bridge" hidden></div>
+        <p class="feedback" id="feedback" aria-live="polite"></p>
+        <div class="control-area">
+          <div class="dpad" aria-label="Controles de direção">
+            <button class="up" type="button" data-move="ArrowUp" aria-label="Cima">↑</button>
+            <button class="left" type="button" data-move="ArrowLeft" aria-label="Esquerda">←</button>
+            <button class="right" type="button" data-move="ArrowRight" aria-label="Direita">→</button>
+            <button class="down" type="button" data-move="ArrowDown" aria-label="Baixo">↓</button>
+          </div>
+          <button class="quiet-button restart" id="restart" type="button">Reiniciar fase</button>
+        </div>
+      </aside>
+    </section>
+    <footer>Projeto escolar · 1º Ensino Médio — Einstein</footer>
+  </main>
+  <dialog id="grade-dialog" aria-labelledby="grade-dialog-title">
+    <form id="grade-form">
+      <h2 id="grade-dialog-title"></h2>
+      <p id="grade-dialog-text"></p>
+      <label class="pin-label" for="grade-pin">PIN do professor</label>
+      <input class="pin-input" id="grade-pin" type="password" inputmode="numeric" pattern="[0-9]{4,8}" maxlength="8" autocomplete="off" required>
+      <div id="grade-confirm-wrap" hidden>
+        <label class="pin-label" for="grade-confirm">Confirme o PIN</label>
+        <input class="pin-input" id="grade-confirm" type="password" inputmode="numeric" pattern="[0-9]{4,8}" maxlength="8" autocomplete="off">
+      </div>
+      <p class="pin-error" id="grade-error" role="alert"></p>
+      <div class="grade-dialog-actions">
+        <button class="primary-button" id="grade-submit" type="submit"></button>
+        <button class="quiet-button" id="grade-cancel" type="button">Cancelar</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="help">
+    <form method="dialog">
+      <h2>Como jogar</h2>
+      <p>Use as quatro setas do teclado ou da tela. Cada toque move uma casa. A coordenada indica a <strong>coluna</strong> e depois a <strong>linha</strong>.</p>
+      <p>Colete os cristais da missão para abrir o portal.</p>
+      <p id="combat-help" hidden>Use a seta na direção de um monstro vizinho para atacar com a espada.</p>
+      <button class="primary-button">Voltar ao jogo</button>
+    </form>
+  </dialog>
+  <dialog id="result">
+    <div>
+      <span class="result-gem gem" aria-hidden="true"></span>
+      <h2 id="result-title"></h2>
+      <p id="result-text"></p>
+      <div class="result-actions">
+        <button class="primary-button" id="continue" type="button"></button>
+        <button class="quiet-button" id="replay" type="button">Reiniciar fase</button>
+      </div>
+    </div>
+  </dialog>
+</body>
+</html>
